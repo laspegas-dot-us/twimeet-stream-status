@@ -1,0 +1,24 @@
+{
+  "name": "twimeet-stream-status",
+  "version": "1.0.0",
+  "description": "Automatyzacja aktualizacji statusów do odczytu przez OBS",
+  "main": "src/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/laspegas-dot-us/twimeet-stream-status.git"
+  },
+  "author": "Alicja (https://github.com/noskla)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/laspegas-dot-us/twimeet-stream-status/issues"
+  },
+  "homepage": "https://github.com/laspegas-dot-us/twimeet-stream-status#readme",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "exceljs": "^4.3.0",
+    "moment": "^2.29.3"
+  }
+}
