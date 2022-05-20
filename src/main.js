@@ -4,16 +4,15 @@ const axios = require("axios");
 const moment = require("moment");
 const ExcelJS = require("exceljs");
 
-const panelsScheduleFile = "../../twimeet-stream-status-test/schedule.xlsx";
+const panelsScheduleFile = "./example_files/schedule.xlsx";
 var scheduleWorkbook = null;
 var scheduleWorksheet = null;
-var schedule = {};
 
 class StatusFilePath {
-	static panelNow   = "../../twimeet-stream-status-test/status.txt";
-	static panelNext  = "../../twimeet-stream-status-test/status_next.txt";
-	static panelBreak = "../../twimeet-stream-status-test/status_break.txt";
-	static lpfmSong   = "../../twimeet-stream-status-test/status_song.txt";
+	static panelNow   = "./example_files/status.txt";
+	static panelNext  = "./example_files/status_next.txt";
+	static panelBreak = "./example_files/status_break.txt";
+	static lpfmSong   = "./example_files/status_song.txt";
 }
 
 // #=#=#=#=#=#=#=# #=#=#=#=#=#=#=# #=#=#=#=#=#=#=# #=#=#=#=#=#=#=# #=#=#=#=#=#=#=#
@@ -64,7 +63,7 @@ async function refreshPanels() {
 	} else {
 		putToFile(`${upcoming.now.org}: ${upcoming.now.name}`, StatusFilePath.panelNow);
 	}
-	
+
 	putToFile(`Następnie o ${upcoming.next.time.format("HH:mm")} => ${upcoming.next.name}`, StatusFilePath.panelNext);
 	putToFile(`Zapraszamy już o ${upcoming.next.time.format("HH:mm")} na prelekcję pt.${EOL}${EOL}${upcoming.next.org}: ${upcoming.next.name}`, StatusFilePath.panelBreak);
 
