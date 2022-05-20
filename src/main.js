@@ -28,6 +28,9 @@ async function readSchedule() {
 		next: {name: "", org: "", time: moment()}
 	}
 
+	let closestBefore = Number.NEGATIVE_INFINITY;
+	let closestAfter = Infinity;
+
 	scheduleWorksheet.eachRow({ includeEmpty: false }, (row, rowNumber) => {
 		if (rowNumber < 2) return;
 
@@ -35,10 +38,37 @@ async function readSchedule() {
 		let panelName = row.getCell("B").value;
 		let panelOrg  = row.getCell("C").value;
 
+		let delta = startTime - moment();
+		if (delta > 0 && delta < closestAfter) {
+			closestAfter = delta;
+			panels["next"] = {name: panelName, org: panelOrg, time: startTime};
+			return;
+		}
+
+		if (delta < 0 && delta > closestBefore) {
+			closestBefore = delta;
+			panels["now"] = {name: panelName, org: panelOrg, time: startTime};
+		}
+
 	});
 
 	return panels;
 
+}
+
+async function refreshPanels() {
+	let upcoming = await readSchedule();
+
+	if (upcoming.now.name === "") {
+		putToFile(`-`, StatusFilePath.panelNow);
+	} else {
+		putToFile(`${upcoming.now.org}: ${upcoming.now.name}`, StatusFilePath.panelNow);
+	}
+	
+	putToFile(`Następnie o ${upcoming.next.time.format("HH:mm")} => ${upcoming.next.name}`, StatusFilePath.panelNext);
+	putToFile(`Zapraszamy już o ${upcoming.next.time.format("HH:mm")} na prelekcję pt.${EOL}${EOL}${upcoming.next.org}: ${upcoming.next.name}`, StatusFilePath.panelBreak);
+
+	console.log("Pomyślnie odświeżono harmonogram atrakcji.");
 }
 
 
@@ -56,7 +86,6 @@ async function refreshSchedule() {
 
 	scheduleWorkbook = workbook;
 	scheduleWorksheet = scheduleWorkbook.getWorksheet(1);
-	console.log("Pomyślnie odświeżono harmonogram atrakcji.");
 
 }
 
@@ -91,7 +120,10 @@ function putToFile(content, filePath) {
 async function main() {
 
 	setInterval(() => getSongStatus().then(song => putToFile(song, StatusFilePath.lpfmSong)), 5 * 1000);
-	setInterval(() => refreshSchedule().then(readSchedule), 10 * 1000);
+	setInterval(() => refreshSchedule(), 10 * 1000);
+	setInterval(() => refreshPanels(), 4 * 1000);
+
+	refreshSchedule();
 
 }
 
