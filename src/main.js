@@ -23,7 +23,10 @@ async function readSchedule() {
 	if (scheduleWorkbook === null || scheduleWorksheet === null)
 		return;
 
-	schedule = {};
+	let panels = {
+		now:  {name: "", org: "", time: moment()},
+		next: {name: "", org: "", time: moment()}
+	}
 
 	scheduleWorksheet.eachRow({ includeEmpty: false }, (row, rowNumber) => {
 		if (rowNumber < 2) return;
@@ -32,12 +35,12 @@ async function readSchedule() {
 		let panelName = row.getCell("B").value;
 		let panelOrg  = row.getCell("C").value;
 
-		console.log(panelOrg + ": " + panelName + " - " + startTime.format("D.M.Y HH:mm:ss"));
-		console.log("Pomyślnie odświeżono harmonogram atrakcji (etap 2).");
-
 	});
 
+	return panels;
+
 }
+
 
 async function refreshSchedule() {
 
@@ -53,7 +56,7 @@ async function refreshSchedule() {
 
 	scheduleWorkbook = workbook;
 	scheduleWorksheet = scheduleWorkbook.getWorksheet(1);
-	console.log("Pomyślnie odświeżono harmonogram atrakcji (etap 1).");
+	console.log("Pomyślnie odświeżono harmonogram atrakcji.");
 
 }
 
